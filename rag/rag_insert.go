@@ -8,6 +8,7 @@ import (
 	"github.com/milvus-io/milvus/client/v2/column"
 	"github.com/milvus-io/milvus/client/v2/milvusclient"
 	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/option"
 )
 
 type Pipeline struct {
@@ -28,8 +29,11 @@ func repeat(s string, n int) []string {
 	return arr
 }
 
-func NewPipeline(collectionName string) (*Pipeline, error) {
-	embedClient := NewEmbeddingClient()
+func NewPipeline(collectionsName string) (*Pipeline, error) {
+	embedClient := openai.NewClient(
+		option.WithAPIKey(utils.GetEmbedApiKeyConfig()),
+		option.WithBaseURL(utils.GetEmbedUrl()),
+	)
 	milvusClient, err := milvusclient.New(context.Background(), &milvusclient.ClientConfig{
 		Address: "localhost:19530",
 	})
@@ -41,7 +45,7 @@ func NewPipeline(collectionName string) (*Pipeline, error) {
 		embedClient:    &embedClient,
 		milvusClient:   milvusClient,
 		chunker:        chunker,
-		collectionName: collectionName,
+		collectionName: collectionsName,
 	}, nil
 }
 func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource string) error {
@@ -55,7 +59,7 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 			end = len(chunks)
 		}
 		batchChunks := chunks[i:end]
-		vectors, err := EmbeddingHandler(ctx, p.embedClient, batchChunks)
+		vectors, err := p.EmbeddingHandler(ctx, batchChunks)
 		if err != nil {
 			return fmt.Errorf("rag:第%d批Embedding失败:%w", i/batchLength, err)
 		}
@@ -73,6 +77,12 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 		}
 		fmt.Printf("tag:成功插入%d条数据(第%d批),IDs:%v\n",
 			result.InsertCount, i/batchLength+1, result.IDs)
+		_, err = p.milvusClient.Flush(ctx, milvusclient.NewFlushOption(p.collectionName))
+		if err != nil {
+			return fmt.Errorf("rag:第%d批Flush失败: %w", i/batchLength, err)
+		}
+		fmt.Printf("tag:第%d批Flush完成\n", i/batchLength+1)
 	}
+
 	return nil
 }

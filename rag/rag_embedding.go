@@ -6,17 +6,10 @@ import (
 	"fmt"
 
 	"github.com/openai/openai-go/v3"
-	"github.com/openai/openai-go/v3/option"
 )
 
-func NewEmbeddingClient() openai.Client {
-	return openai.NewClient(
-		option.WithAPIKey(utils.GetEmbedApiKeyConfig()),
-		option.WithBaseURL(utils.GetEmbedUrl()),
-	)
-}
-func EmbeddingHandler(ctx context.Context, client *openai.Client, texts []string) ([][]float32, error) {
-	resp, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+func (p *Pipeline) EmbeddingHandler(ctx context.Context, texts []string) ([][]float32, error) {
+	resp, err := p.embedClient.Embeddings.New(ctx, openai.EmbeddingNewParams{
 		Model: utils.GetEmbedModel(),
 		Input: openai.EmbeddingNewParamsInputUnion{OfArrayOfStrings: texts},
 	})

@@ -1,22 +1,36 @@
 package main
 
 import (
+	"Main/rag"
 	"Main/utils"
 	"context"
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/openai/openai-go/v3"
 	"github.com/openai/openai-go/v3/option"
 )
 
 func main() {
-	//ctx := context.Background()
-	//rag.CreateCollection()
-	//rag.CreateIndex(true, true)
-	//pipeline, err := rag.NewPipeline("wiki_docs")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	pipeline, err := rag.NewPipeline(utils.GetCollectionsName())
+
+	pipeline.CreateCollection(ctx)
+	err = pipeline.InsertDocument(ctx, "王爷是清朝的贵族封号，位于亲王之下，贝勒之上。", "wiki_history")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pipeline.CreateIndex(ctx, false, false)
+	results, err := pipeline.Search(ctx, "王爷", 5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("搜索结果: %+v\n", results)
+
 	//docText := `
 	//《采访程序员》
 	//你是一个一个一个
@@ -63,9 +77,6 @@ func main() {
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
-	//defer pipeline.Close()
-
-	utils.CheckCollections(utils.GetCollectionsName())
 
 }
 func testAI() {

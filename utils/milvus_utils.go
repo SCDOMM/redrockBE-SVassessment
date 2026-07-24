@@ -7,10 +7,7 @@ import (
 	"github.com/milvus-io/milvus/client/v2/milvusclient"
 )
 
-func CheckCollectionsName() error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+func CheckCollectionsName(ctx context.Context) error {
 	milvusAddr := "localhost:19530"
 	token := "root:Milvus"
 	client, err := milvusclient.New(ctx, &milvusclient.ClientConfig{
@@ -30,9 +27,7 @@ func CheckCollectionsName() error {
 	fmt.Println(collectionNames)
 	return nil
 }
-func CheckCollections(collectionName string) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+func CheckCollections(ctx context.Context, collectionName string) error {
 
 	milvusAddr := "localhost:19530"
 	token := "root:Milvus"

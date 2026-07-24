@@ -13,23 +13,14 @@ import (
 )
 
 func main() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
 	pipeline, err := rag.NewPipeline(utils.GetCollectionsName())
 
+	if err != nil {
+		fmt.Println("Failed to create pipeline: " + err.Error())
+	}
 	pipeline.CreateCollection(ctx)
-	err = pipeline.InsertDocument(ctx, "王爷是清朝的贵族封号，位于亲王之下，贝勒之上。", "wiki_history")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	pipeline.CreateIndex(ctx, false, false)
-	results, err := pipeline.Search(ctx, "王爷", 5)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("搜索结果: %+v\n", results)
 
 	//docText := `
 	//《采访程序员》
@@ -72,11 +63,21 @@ func main() {
 	//老爷有赏啊
 	//戳啦，极霸矛嘛
 	//漂亮滴很呐
-	// `
+	//`
 	//err = pipeline.InsertDocument(ctx, docText, "测试文档")
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	pipeline.CreateIndex(ctx, false, false)
+
+	results, err := pipeline.Search(ctx, "王爷", 5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("搜索结果: %+v\n", results)
 
 }
 func testAI() {

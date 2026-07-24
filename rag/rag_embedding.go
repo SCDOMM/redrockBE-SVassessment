@@ -14,10 +14,9 @@ func (p *Pipeline) EmbeddingHandler(ctx context.Context, texts []string) ([][]fl
 		Input: openai.EmbeddingNewParamsInputUnion{OfArrayOfStrings: texts},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("rag:embedding 调用失败: %w", err)
+		return nil, fmt.Errorf("rag:failed to embedding %w", err)
 	}
 	vectors := make([][]float32, len(resp.Data))
-	fmt.Print(vectors)
 	for i, item := range resp.Data {
 		vec64 := item.Embedding
 		vec32 := make([]float32, len(vec64))

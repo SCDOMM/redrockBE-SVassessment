@@ -38,7 +38,7 @@ func NewPipeline(collectionsName string) (*Pipeline, error) {
 		Address: "localhost:19530",
 	})
 	if err != nil {
-		return nil, fmt.Errorf("rag:创建Pipeline错误！" + err.Error())
+		return nil, fmt.Errorf("rag:fail to create pipeline" + err.Error())
 	}
 	chunker := utils.NewTextChunker(1000, 200)
 	return &Pipeline{
@@ -61,7 +61,7 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 		batchChunks := chunks[i:end]
 		vectors, err := p.EmbeddingHandler(ctx, batchChunks)
 		if err != nil {
-			return fmt.Errorf("rag:第%d批Embedding失败:%w", i/batchLength, err)
+			return fmt.Errorf("rag:fail to embed the %d batch %w", i/batchLength, err)
 		}
 		// 构建列数据，id自增不用摁造
 		columns := []column.Column{
@@ -69,20 +69,20 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 			column.NewColumnVarChar("wiki_resource", repeat(resource, len(batchChunks))),
 			column.NewColumnFloatVector("wiki_vector", int(utils.GetEmbedDim()), vectors),
 		}
-		result, err := p.milvusClient.Insert(ctx,
+		_, err = p.milvusClient.Insert(ctx,
 			milvusclient.NewColumnBasedInsertOption(p.collectionName, columns...),
 		)
 		if err != nil {
-			return fmt.Errorf("rag:第%d批插入失败: %w", i/batchLength, err)
+			return fmt.Errorf("rag:fail to insert the %d batch %w", i/batchLength, err)
 		}
-		fmt.Printf("tag:成功插入%d条数据(第%d批),IDs:%v\n",
-			result.InsertCount, i/batchLength+1, result.IDs)
-		_, err = p.milvusClient.Flush(ctx, milvusclient.NewFlushOption(p.collectionName))
-		if err != nil {
-			return fmt.Errorf("rag:第%d批Flush失败: %w", i/batchLength, err)
-		}
-		fmt.Printf("tag:第%d批Flush完成\n", i/batchLength+1)
-	}
 
+	}
+	task, err := p.milvusClient.Flush(ctx, milvusclient.NewFlushOption(p.collectionName))
+	if err != nil {
+		return fmt.Errorf("rag:fail to flush: %w", err)
+	}
+	if err = task.Await(ctx); err != nil {
+		return fmt.Errorf("rag:flush over time %w", err)
+	}
 	return nil
 }

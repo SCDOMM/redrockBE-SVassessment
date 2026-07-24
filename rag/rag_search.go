@@ -15,46 +15,35 @@ type SearchResult struct {
 	Resource string  // wiki_resource
 }
 
+// Search 调用前无比调用loadCollections函数
 func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]SearchResult, error) {
 	vectors, err := p.EmbeddingHandler(ctx, []string{queryText})
 	if err != nil {
-		return nil, fmt.Errorf("rag: 查询向量化失败: %w", err)
+		return nil, fmt.Errorf("rag:fail to embed query %w", err)
 	}
 	queryVector := vectors[0]
-	loadTask, err := p.milvusClient.LoadCollection(ctx, milvusclient.NewLoadCollectionOption(p.collectionName))
-	if err != nil {
-		return nil, fmt.Errorf("rag: 加载集合失败: %w", err)
-	}
-	if err = loadTask.Await(ctx); err != nil {
-		return nil, fmt.Errorf("rag: 等待集合加载完成失败: %w", err)
-	}
-
 	searchOption := milvusclient.NewSearchOption(
 		p.collectionName,
 		topK,
 		[]entity.Vector{entity.FloatVector(queryVector)},
-	).WithOutputFields("wiki_varchar", "wiki_resource").WithANNSField("wiki_vector")
-	//WithAnnParam(annParam)
-
-	fmt.Print("searchOption:", searchOption)
-	searchOption = searchOption.WithSearchParam("metric_type", "COSINE")
+	).WithOutputFields("wiki_varchar", "wiki_resource").
+		WithANNSField("wiki_vector")
 	searchResult, err := p.milvusClient.Search(ctx, searchOption)
 	if err != nil {
-		return nil, fmt.Errorf("rag: 搜索失败: %w", err)
+		return nil, fmt.Errorf("rag:fail to search %w", err)
 	}
-	fmt.Print("searchResult:", searchResult)
+
 	var results []SearchResult
 	for _, res := range searchResult {
 		varcharCol := res.GetColumn("wiki_varchar")
 		resourceCol := res.GetColumn("wiki_resource")
-
 		varcharColTyped, ok := varcharCol.(*column.ColumnVarChar)
 		if !ok {
-			return nil, fmt.Errorf("rag: wiki_varchar 列类型不匹配")
+			return nil, fmt.Errorf("rag: wiki_varchar mismatch")
 		}
 		resourceColTyped, ok := resourceCol.(*column.ColumnVarChar)
 		if !ok {
-			return nil, fmt.Errorf("rag: wiki_resource 列类型不匹配")
+			return nil, fmt.Errorf("rag: wiki_resource mismatch")
 		}
 		texts := varcharColTyped.Data()
 		resources := resourceColTyped.Data()

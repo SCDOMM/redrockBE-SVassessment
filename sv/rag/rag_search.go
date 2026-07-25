@@ -10,9 +10,13 @@ import (
 )
 
 type SearchResult struct {
-	Score    float64 // 相似度分数
-	Text     string  // wiki_varchar
-	Resource string  // wiki_resource
+	Score     float64 // 相似度分数
+	Text      string  // wiki_varchar
+	Resource  string  // wiki_resource
+	FilePath  string
+	Language  string
+	startLine int64
+	endLine   int64
 }
 
 // Search 调用前无比调用loadCollections函数
@@ -23,12 +27,12 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 	}
 	queryVector := vectors[0]
 	searchOption := milvusclient.NewSearchOption(
-		p.collectionName,
+		p.CollectionName,
 		topK,
 		[]entity.Vector{entity.FloatVector(queryVector)},
 	).WithOutputFields("wiki_varchar", "wiki_resource").
 		WithANNSField("wiki_vector")
-	searchResult, err := p.milvusClient.Search(ctx, searchOption)
+	searchResult, err := p.MilvusClient.Search(ctx, searchOption)
 	if err != nil {
 		return nil, fmt.Errorf("rag:fail to search %w", err)
 	}
@@ -37,6 +41,11 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 	for _, res := range searchResult {
 		varcharCol := res.GetColumn("wiki_varchar")
 		resourceCol := res.GetColumn("wiki_resource")
+		pathCol := res.GetColumn("file_path")
+		startLineCol := res.GetColumn("start_line")
+		endLineCol := res.GetColumn("end_line")
+		languageCol := res.GetColumn("language")
+
 		varcharColTyped, ok := varcharCol.(*column.ColumnVarChar)
 		if !ok {
 			return nil, fmt.Errorf("rag: wiki_varchar mismatch")
@@ -45,13 +54,39 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 		if !ok {
 			return nil, fmt.Errorf("rag: wiki_resource mismatch")
 		}
+		pathColTyped, ok := pathCol.(*column.ColumnVarChar)
+		if !ok {
+			return nil, fmt.Errorf("rag: file_path mismatch")
+		}
+		languageColTyped, ok := languageCol.(*column.ColumnVarChar)
+		if !ok {
+			return nil, fmt.Errorf("rag: language mismatch")
+		}
+		startLineColTyped, ok := startLineCol.(*column.ColumnInt64)
+		if !ok {
+			return nil, fmt.Errorf("rag: start_line mismatch")
+		}
+		endLineColTyped, ok := endLineCol.(*column.ColumnInt64)
+		if !ok {
+			return nil, fmt.Errorf("rag: end_line mismatch")
+		}
+
 		texts := varcharColTyped.Data()
 		resources := resourceColTyped.Data()
+		path := pathColTyped.Data()
+		language := languageColTyped.Data()
+		startLine := startLineColTyped.Data()
+		endLine := endLineColTyped.Data()
+
 		for i := 0; i < len(texts); i++ {
 			results = append(results, SearchResult{
-				Score:    float64(res.Scores[i]),
-				Text:     texts[i],
-				Resource: resources[i],
+				Score:     float64(res.Scores[i]),
+				Text:      texts[i],
+				Resource:  resources[i],
+				FilePath:  path[i],
+				Language:  language[i],
+				startLine: startLine[i],
+				endLine:   endLine[i],
 			})
 		}
 	}

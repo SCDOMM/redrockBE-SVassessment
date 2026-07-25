@@ -1,13 +1,13 @@
-package utils
+package model
 
 type Response struct {
 	Status string `json:"status"`
 	Info   string `json:"info"`
 }
-type finalResponse struct {
-	status string
-	info   string
-	data   interface{}
+type FinalResponse struct {
+	Status string
+	Info   string
+	Data   interface{}
 }
 
 func (r Response) Error() string {

@@ -6,15 +6,39 @@ import (
 )
 
 type TextChunker struct {
-	ChunkSize    int // 每块字符数
-	ChunkOverlap int // 重叠字符数
+	ChunkSize     int // 每块字符数
+	ChunkOverlap  int // 重叠字符数
+	LineChunkSize int //按照行数分割
 }
 
-func NewTextChunker(chunkSize, overlap int) *TextChunker {
+func NewTextChunker(chunkSize, overlap, lineChunSize int) *TextChunker {
 	return &TextChunker{
-		ChunkSize:    chunkSize,
-		ChunkOverlap: overlap,
+		ChunkSize:     chunkSize,
+		ChunkOverlap:  overlap,
+		LineChunkSize: lineChunSize,
 	}
+}
+
+// SplitByLines 按行数切割代码
+func (tc *TextChunker) SplitByLines(text string) ([]string, []int64, []int64) {
+	lines := strings.Split(text, "\n")
+	var chunks []string
+	var startLines []int64
+	var endLines []int64
+	if tc.LineChunkSize <= 0 {
+		tc.LineChunkSize = 50 // 默认每块50行
+	}
+	for i := 0; i < len(lines); i += tc.LineChunkSize {
+		end := i + tc.LineChunkSize
+		if end > len(lines) {
+			end = len(lines)
+		}
+		chunkText := strings.Join(lines[i:end], "\n")
+		chunks = append(chunks, chunkText)
+		startLines = append(startLines, int64(i)) // 起始行号
+		endLines = append(endLines, int64(end))   // 结束行号
+	}
+	return chunks, startLines, endLines
 }
 
 // SplitByParagraph 按照段落切割文档

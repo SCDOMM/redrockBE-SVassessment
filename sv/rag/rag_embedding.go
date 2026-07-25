@@ -9,7 +9,7 @@ import (
 )
 
 func (p *Pipeline) EmbeddingHandler(ctx context.Context, texts []string) ([][]float32, error) {
-	resp, err := p.embedClient.Embeddings.New(ctx, openai.EmbeddingNewParams{
+	resp, err := p.EmbedClient.Embeddings.New(ctx, openai.EmbeddingNewParams{
 		Model: utils.GetEmbedModel(),
 		Input: openai.EmbeddingNewParamsInputUnion{OfArrayOfStrings: texts},
 	})

@@ -20,6 +20,7 @@ type ConfigData struct {
 	MilvusConfig  MilvusConfig  `yaml:"MilvusConfig"`
 	GeneralConfig GeneralConfig `yaml:"GeneralConfig"`
 	NetworkConfig NetworkConfig `yaml:"NetworkConfig"`
+	MySQLConfig   MySQLConfig   `yaml:"MySQLConfig"`
 }
 type AiConfig struct {
 	ChatApiKey  string `yaml:"chat_api_key"`
@@ -37,8 +38,16 @@ type GeneralConfig struct {
 	MachineId int64 `yaml:"machine_id"`
 }
 type NetworkConfig struct {
-	Host string `yaml:"host"`
-	Port string `yaml:"port"`
+	NetworkHost string `yaml:"network_host"`
+	NetworkPort string `yaml:"network_port"`
+}
+type MySQLConfig struct {
+	UserName     string `yaml:"user_name"`
+	Password     string `yaml:"password"`
+	Host         string `yaml:"host"`
+	Port         string `yaml:"port"`
+	DataBaseName string `yaml:"database_name"`
+	ExtraConfig  string `yaml:"extra_config"`
 }
 
 func init() {
@@ -80,9 +89,27 @@ func GetChatModel() string {
 func GetMachineId() int64 {
 	return configData.GeneralConfig.MachineId
 }
-func GetHost() string {
-	return configData.NetworkConfig.Host
+func GetNetworkHost() string {
+	return configData.NetworkConfig.NetworkHost
 }
-func GetPort() string {
-	return configData.NetworkConfig.Port
+func GetNetworkPort() string {
+	return configData.NetworkConfig.NetworkPort
+}
+func GetDatabaseName() string {
+	return configData.MySQLConfig.DataBaseName
+}
+func GetDatabaseHost() string {
+	return configData.MySQLConfig.Host
+}
+func GetDatabasePort() string {
+	return configData.MySQLConfig.Port
+}
+func GetDataBaseUserName() string {
+	return configData.MySQLConfig.UserName
+}
+func GetDataBasePassword() string {
+	return configData.MySQLConfig.Password
+}
+func GetDataBaseExtraConfig() string {
+	return configData.MySQLConfig.ExtraConfig
 }

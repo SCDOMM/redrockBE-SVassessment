@@ -53,12 +53,18 @@ func (p *Pipeline) CreateIndex(ctx context.Context, overwrite bool, autoIndex bo
 	return nil
 }
 func (p *Pipeline) DropCollection(ctx context.Context) error {
-	err := p.MilvusClient.DropCollection(ctx, milvusclient.NewDropCollectionOption("wiki_docs"))
-	return fmt.Errorf("rag:fail to drop collections %w", err)
+	err := p.MilvusClient.DropCollection(ctx, milvusclient.NewDropCollectionOption(p.CollectionName))
+	if err != nil {
+		return fmt.Errorf("rag:fail to drop collections %w", err)
+	}
+	return nil
 }
 func (p *Pipeline) LoadCollections(ctx context.Context) error {
 	loadCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 	defer cancel()
+	if loadCtx == nil {
+		return fmt.Errorf("loadCtx is nil")
+	}
 
 	loadTask, err := p.MilvusClient.LoadCollection(loadCtx,
 		milvusclient.NewLoadCollectionOption(p.CollectionName))

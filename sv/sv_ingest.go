@@ -3,29 +3,10 @@ package sv
 import (
 	"Main/model"
 	"Main/sv/intake"
-	"Main/sv/rag"
-	"Main/utils"
 	"context"
 	"fmt"
-	"sync"
 )
 
-var (
-	taskManager = &intake.TaskManager{}
-	pipeline    = &rag.Pipeline{}
-	once        sync.Once
-)
-
-func init() {
-	once.Do(func() {
-		taskManager = intake.NewTaskManager()
-		var err error
-		pipeline, err = rag.NewPipeline(utils.GetCollectionsName())
-		if err != nil {
-			fmt.Println(err)
-		}
-	})
-}
 
 func NewIngest(repoUrl string) (model.IngestNewDTO, error) {
 	task, err := intake.CreateIntakeTask(repoUrl)
@@ -33,6 +14,7 @@ func NewIngest(repoUrl string) (model.IngestNewDTO, error) {
 		return model.IngestNewDTO{}, err
 	}
 	taskManager.AddTask(&task)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	taskManager.RegisterCancel(task.ID, cancel)
 	go func() {

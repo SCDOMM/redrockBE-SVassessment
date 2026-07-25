@@ -19,6 +19,7 @@ func InitNewChat(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
+
 	chatNewDTO, err := sv.NewChat(chatNewModel)
 	if err != nil {
 		c.JSON(400, model.FinalResponse{
@@ -44,7 +45,7 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 			Data:   nil,
 		})
 	}
-	answer, err := sv.ContinueChat(continueModel)
+	continueDTO, err := sv.ContinueChat(continueModel)
 	if err != nil {
 		c.JSON(500, model.FinalResponse{
 			Status: "400",
@@ -55,7 +56,7 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 	c.JSON(200, model.FinalResponse{
 		Status: "200",
 		Info:   "success",
-		Data:   model.ChatContinueDTO{Answer: answer},
+		Data:   continueDTO,
 	})
 }
 func InitDeleteChat(ctx context.Context, c *app.RequestContext) {

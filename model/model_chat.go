@@ -7,12 +7,12 @@ import (
 )
 
 type ChatModel struct {
-	ChatId    int64                                    `gorm:"primary_key;auto_increment"`
-	RepoUrl   string                                   `gorm:"size:255;not null"`
-	History   []openai.ChatCompletionMessageParamUnion `gorm:"type:text;"`
-	CreatedAt time.Time                                `gorm:"type:timestamp;not null"`
-	UpdatedAt time.Time                                `gorm:"type:timestamp;not null"`
-	DeletedAt time.Time                                `gorm:"type:timestamp;not null"`
+	ChatId    int64                                    `gorm:"primary_key"`
+	RepoUrl   string                                   `gorm:"size:255;not null;index"`
+	History   []openai.ChatCompletionMessageParamUnion `gorm:"serializer:json;type:longtext"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time `gorm:"index"`
 }
 type ChatNewModel struct {
 	RepoUrl  string `json:"repo_url"`

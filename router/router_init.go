@@ -8,7 +8,7 @@ import (
 )
 
 func InitRouter() {
-	h := server.Default(server.WithHostPorts(utils.GetHost() + utils.GetPort()))
+	h := server.Default(server.WithHostPorts(utils.GetNetworkHost() + utils.GetNetworkPort()))
 
 	g1 := h.Group("api/ingest")
 	g1.POST("/new", api.InitNewIngest)

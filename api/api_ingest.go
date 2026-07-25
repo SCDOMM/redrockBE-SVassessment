@@ -4,6 +4,7 @@ import (
 	"Main/model"
 	"Main/sv"
 	"context"
+	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -36,7 +37,15 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 }
 func InitCheckIngest(ctx context.Context, c *app.RequestContext) {
 	taskId := c.Param("id")
-	checkDTO, err := sv.CheckIngest(taskId)
+	id, err := strconv.Atoi(taskId)
+	if err != nil {
+		c.JSON(500, model.FinalResponse{
+			Status: "400",
+			Info:   err.Error(),
+			Data:   nil,
+		})
+	}
+	checkDTO, err := sv.CheckIngest(int64(id))
 	if err != nil {
 		c.JSON(400, model.FinalResponse{
 			Status: "500",
@@ -48,5 +57,31 @@ func InitCheckIngest(ctx context.Context, c *app.RequestContext) {
 		Status: "200",
 		Info:   "success",
 		Data:   checkDTO,
+	})
+}
+func InitCancelIngest(ctx context.Context, c *app.RequestContext) {
+	ingestModel := model.IngestCancelModel{}
+	err := c.BindJSON(&ingestModel)
+	if err != nil {
+		c.JSON(400, model.FinalResponse{
+			Status: "400",
+			Info:   err.Error(),
+			Data:   nil,
+		})
+		return
+	}
+	err = sv.CancelIngest(ingestModel.TaskId)
+	if err != nil {
+		c.JSON(400, model.FinalResponse{
+			Status: "500",
+			Info:   err.Error(),
+			Data:   nil,
+		})
+		return
+	}
+	c.JSON(200, model.FinalResponse{
+		Status: "200",
+		Info:   "success",
+		Data:   nil,
 	})
 }

@@ -3,6 +3,7 @@ package intake
 import (
 	"Main/sv/rag"
 	"context"
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -55,8 +56,14 @@ func getLanguage(filePath string) string {
 func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipeline) error {
 	defer os.RemoveAll(task.TempDir)
 	resource := task.RepoURL
+	task.SafeSetStatus("running")
 
 	err := filepath.WalkDir(task.TempDir, func(path string, d fs.DirEntry, err error) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
 		if err != nil {
 			return err
 		}
@@ -75,14 +82,14 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 
 		data, err := os.ReadFile(path)
 		if err != nil {
-			task.Error = append(task.Error, "读取文件失败: "+path+": "+err.Error())
+			task.SafeSetError(fmt.Errorf("读取文件失败: " + path + ": " + err.Error()))
 			return nil
 		}
 		docText := string(data)
 		// 计算相对路径
 		relPath, err := filepath.Rel(task.TempDir, path)
 		if err != nil {
-			task.Error = append(task.Error, "计算相对路径失败: "+err.Error())
+			task.SafeSetError(fmt.Errorf("计算相对路径失败: " + err.Error()))
 			return nil
 		}
 		// 获取语言
@@ -90,37 +97,39 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 		// 插入到 Milvus
 		err = pipeline.InsertDocument(ctx, docText, resource, relPath, language)
 		if err != nil {
-			task.Error = append(task.Error, "插入文档失败: "+relPath+": "+err.Error())
+			task.SafeSetError(fmt.Errorf("插入文档失败: " + relPath + ": " + err.Error()))
 			return nil
 		}
 		// 更新进度
-		task.IndexedFiles++
-		if task.TotalFiles > 0 {
-			task.Progress = float64(task.IndexedFiles) / float64(task.TotalFiles)
-		}
+		task.SafeIncrementProgress()
 		return nil
 	})
+	if errors.Is(err, context.Canceled) {
+		task.SafeSetStatus("canceled")
+		task.SafeSetError(fmt.Errorf("intake task cancelled"))
+		return err
+	}
+
 	if err != nil {
-		task.Status = "failed"
-		task.Error = append(task.Error, "摄取目录失败: "+err.Error())
+		task.SafeSetError(fmt.Errorf("摄取目录失败: " + err.Error()))
 		return err
 	}
 
 	flushTask, err := pipeline.MilvusClient.Flush(ctx, milvusclient.NewFlushOption(pipeline.CollectionName))
 	if err != nil {
-		task.Status = "failed"
-		task.Error = append(task.Error, "刷入失败: "+err.Error())
+		task.SafeSetError(fmt.Errorf("刷入失败: " + err.Error()))
 		return fmt.Errorf("rag: fail to flush: %w", err)
 	}
 	if err = flushTask.Await(ctx); err != nil {
-		task.Status = "failed"
-		task.Error = append(task.Error, "刷入失败: "+err.Error())
+		task.SafeSetError(fmt.Errorf("刷入失败: " + err.Error()))
 		return fmt.Errorf("rag: flush timeout: %w", err)
 	}
 
 	// 所有文件处理完毕
-	task.Status = "completed"
+	task.SafeSetStatus("completed")
+	task.mu.Lock()
 	task.Progress = 1.0
 	task.IndexedFiles = task.TotalFiles
+	task.mu.Unlock()
 	return nil
 }

@@ -13,6 +13,7 @@ func InitRouter() {
 	g1 := h.Group("api/ingest")
 	g1.POST("/new", api.InitNewIngest)
 	g1.GET("/:id/status", api.InitCheckIngest)
+	g1.POST("/delete", api.InitCancelIngest)
 
 	g2 := h.Group("/api/chat")
 	g2.POST("/new", api.InitNewChat)

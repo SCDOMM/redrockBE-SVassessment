@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -22,7 +23,29 @@ type IntakeTask struct {
 	TotalFiles   int
 	IndexedFiles int
 	CreatedAt    time.Time
+	mu           sync.Mutex
 	Error        []string
+}
+
+func (t *IntakeTask) SafeSetStatus(status string) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.Status = status
+}
+
+func (t *IntakeTask) SafeIncrementProgress() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.IndexedFiles++
+	if t.TotalFiles > 0 {
+		t.Progress = float64(t.IndexedFiles) / float64(t.TotalFiles)
+	}
+}
+
+func (t *IntakeTask) SafeSetError(err error) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.Error = append(t.Error, err.Error())
 }
 
 func CreateIntakeTask(repoURL string) (IntakeTask, error) {
@@ -43,8 +66,7 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 	dirName := "intake_" + strconv.FormatInt(id, 10)
 	tempDir, err := os.MkdirTemp("", dirName)
 	if err != nil {
-		task.Error = append(task.Error, "fail to create temp dir")
-		task.Status = "failed"
+		task.SafeSetError(fmt.Errorf("fail to create temp dir"))
 		return task, err
 	}
 	task.TempDir = tempDir
@@ -56,8 +78,7 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 	})
 	if err != nil {
 		err1 := os.RemoveAll(tempDir)
-		task.Status = "failed"
-		task.Error = append(task.Error, "fail to clone repository"+err.Error())
+		task.SafeSetError(fmt.Errorf("fail to clone repository" + err.Error()))
 		if err1 != nil {
 			err = fmt.Errorf("fail to clone repository" + err.Error() + ",fail to delete temp directory" + err1.Error())
 		}
@@ -88,8 +109,7 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 
 	if err != nil {
 		err1 := os.RemoveAll(tempDir)
-		task.Status = "failed"
-		task.Error = append(task.Error, "fail to range repository:"+err.Error())
+		task.SafeSetError(fmt.Errorf("fail to range repository:" + err.Error()))
 		if err1 != nil {
 			err = fmt.Errorf("fail to range repository!" + err.Error() + "fail to delete temp directory" + err1.Error())
 		}
@@ -97,7 +117,6 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 	}
 
 	task.TotalFiles = fileCount
-	task.Status = "running"
 	return task, nil
 }
 

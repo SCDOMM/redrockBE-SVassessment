@@ -1,0 +1,27 @@
+AiConfig:
+  chat_api_key:  #使用聊天模型的APIkey
+  chat_url: https://api.deepseek.com/v1 #使用聊天模型的API链接，这里默认是DS
+  chat_model: deepseek-v4-flash #使用的聊天模型
+  chat_context: 20 #保留多少轮对话
+  embed_api_key: #使用embed模型的APIkey
+  embed_url: #使用embed模型的API链接
+  embed_model: qwen3.7-text-embedding #使用的embed模型，推荐使用千问
+  embed_dim: 1024 #使用embed模型转换文档/代码时用的维数,注意！修改后需要重建一遍集合！
+MilvusConfig:
+  collections_name: wiki_docs #使用的milvus集合名
+GeneralConfig:
+  machine_id: 1 #用雪花算法生成ID时必要的machine_id,随便填个数字即可
+NetworkConfig:
+  network_host: 127.0.0.1 #服务地址
+  network_port: 8080 #服务端口
+MySQLConfig:
+  user_name: root #MySQL用户名
+  password:  #MySQL密码
+  host: 127.0.0.1 #MySQL地址
+  port: 3306 #MySQL端口
+  database_name: dickwiki #在MySQL中储存AI对话上下文时用到的数据库名
+  extra_config: ?charset=utf8mb4&parseTime=True&loc=Local #额外配置
+DefaultExclude: #读取仓库时默认忽略的后缀名，如果用户不传入，就使用它
+  [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp", ".mp3", ".wav", ".mp4", ".avi", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".zip", ".tar", ".gz", ".bz2", ".exe", ".dll", ".so", ".dylib", ".bin", ".obj", ".lib", ".ttf", ".otf", ".woff"]
+DefaultInclude: #读取仓库时默认包括的后缀名，如果用户不传入，就使用它
+  [".go", ".py", ".js", ".ts", ".java", ".c", ".cpp", ".h", ".hpp", ".cs", ".rb", ".php", ".swift", ".kt", ".scala", ".rs", ".sh", ".bash", ".zsh", ".yaml", ".yml", ".json", ".xml", ".toml", ".md", ".txt", ".html", ".css", ".scss", ".sql", ".r", ".m", ".mm"]

@@ -50,6 +50,9 @@ func ContinueChat(continueModel model.ChatContinueModel) (model.ChatContinueDTO,
 	}
 
 	err = pipeline.LoadCollections(ctx)
+	if err != nil {
+		return model.ChatContinueDTO{}, err
+	}
 	result, err := pipeline.Search(ctx, continueModel.Question, 5)
 	if err != nil {
 		return model.ChatContinueDTO{}, err
@@ -58,6 +61,9 @@ func ContinueChat(continueModel model.ChatContinueModel) (model.ChatContinueDTO,
 	chatStruct := llm.LoadChatStruct(pipeline.ChatClient, chatModel)
 
 	answer, err := chatStruct.AskQuestion(ctx, result, continueModel.Question)
+	if err != nil {
+		return model.ChatContinueDTO{}, err
+	}
 
 	//升级对话
 	err = dao.UpdateChat(chatStruct.ChatModel)

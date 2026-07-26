@@ -7,9 +7,8 @@ import (
 	"fmt"
 )
 
-
-func NewIngest(repoUrl string) (model.IngestNewDTO, error) {
-	task, err := intake.CreateIntakeTask(repoUrl)
+func NewIngest(newIngestModel model.IngestNewModel) (model.IngestNewDTO, error) {
+	task, err := intake.CreateIntakeTask(newIngestModel)
 	if err != nil {
 		return model.IngestNewDTO{}, err
 	}
@@ -40,6 +39,7 @@ func CheckIngest(taskId int64) (model.IngestCheckDTO, error) {
 		Progress:    task.Progress,
 		TotalFile:   task.TotalFiles,
 		IndexedFile: task.IndexedFiles,
+		Error:       task.Error,
 	}, nil
 }
 func CancelIngest(taskId int64) error {

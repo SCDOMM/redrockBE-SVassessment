@@ -76,7 +76,7 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 			return nil
 		}
 		//能读吗
-		if !isIndexableFile(path, d) {
+		if !isIndexableFile(path, task.Include, task.Exclude, d) {
 			return nil
 		}
 
@@ -109,9 +109,14 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 		task.SafeSetError(fmt.Errorf("intake task cancelled"))
 		return err
 	}
-
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("摄取目录失败: " + err.Error()))
+		return err
+	}
+
+	err = pipeline.CreateIndex(ctx, false, true)
+	if err != nil {
+		task.SafeSetError(fmt.Errorf("创建索引失败: " + err.Error()))
 		return err
 	}
 
@@ -129,7 +134,6 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 	task.SafeSetStatus("completed")
 	task.mu.Lock()
 	task.Progress = 1.0
-	task.IndexedFiles = task.TotalFiles
 	task.mu.Unlock()
 	return nil
 }

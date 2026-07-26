@@ -38,6 +38,9 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 		if err != nil {
 			return err
 		}
+		if len(vectors) != len(batchChunks) {
+			return fmt.Errorf("embedding returned %d vectors for %d texts", len(vectors), len(batchChunks))
+		}
 		columns := []column.Column{
 			column.NewColumnVarChar("wiki_varchar", batchChunks),
 			column.NewColumnFloatVector("wiki_vector", int(utils.GetEmbedDim()), vectors),
@@ -57,7 +60,7 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 	return nil
 }
 
-// SimpleInsertDocument 简单插入文档(按段落分割文本)
+// SimpleInsertDocument 简单插入文档(按段落分割文本,测试用,实际生产不用)
 func (p *Pipeline) SimpleInsertDocument(ctx context.Context, docText string, resource string) error {
 	chunks := p.Chunker.SplitByParagraph(docText)
 	// 批量喂AI向量化

@@ -30,7 +30,6 @@ func NewChatStruct(chatClient *openai.Client, repUrl string) *ChatStruct {
 			History:   make([]openai.ChatCompletionMessageParamUnion, 0, 20),
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Time{},
-			DeletedAt: time.Time{},
 		},
 	}
 }
@@ -45,16 +44,17 @@ func LoadChatStruct(chatClient *openai.Client, chatModel *model.ChatModel) *Chat
 // AskQuestion 请优先配置好ChatStruct并且执行完搜索
 func (l *ChatStruct) AskQuestion(ctx context.Context, searchResults []rag.SearchResult, question string) (string, error) {
 	var sb strings.Builder
-	sb.WriteString("以下是相关文档片段(按相关度从高到低排序)：\n\n")
+	sb.WriteString("以下是搜索得到的相关文档片段(来自后台,不来自用户,按相关度从高到低排序)：\n\n")
 	for i, r := range searchResults {
-		sb.WriteString(fmt.Sprintf("【片段%d】(来源:%s，相似度:%.2f)\n%s\n\n",
-			i+1, r.Resource, r.Score, r.Text))
+		sb.WriteString(fmt.Sprintf("【片段%d】(仓库来源:%s,相似度:%.2f,相对路径%s,使用语言%s,代码始于%d行,终于%d行)\n%s\n\n",
+			i+1, r.Resource, r.Score, r.FilePath, r.Language, r.StartLine, r.EndLine, r.Text))
 	}
 	systemMessage := openai.SystemMessage(`你是一个智能文档助手。请严格根据提供的文档片段回答用户问题。` +
-		`如果片段中未包含足够信息，请直接说明“文档中未找到相关信息”，不要编造，不要虚构API，不要说出不存在的代码。` +
+		`如果片段中未包含足够信息,请直接说明“文档中未找到相关信息”(因为摄取仓库时过滤了一部分文件),不要编造,不要虚构API,不要说出不存在的代码。` +
+		`当用户提问某些常规问题/奇怪问题,如"你有无上下文能力","你这个吃白饭的大肥鱼"等与代码、文档无关的问题时无需考虑文档返回的片段。` +
 		`仓库链接为` +
 		l.ChatModel.RepoUrl +
-		`,回答时请尽量引用原文，保持准确。`)
+		`,回答时请尽量引用原文,保持准确。`)
 
 	userMessage := fmt.Sprintf("文档片段：\n%s\n\n用户问题：%s", sb.String(), question)
 
@@ -89,9 +89,9 @@ func (l *ChatStruct) AskQuestion(ctx context.Context, searchResults []rag.Search
 		openai.UserMessage(question),
 		openai.AssistantMessage(answer),
 	)
-	//保留20轮消息
-	if len(l.ChatModel.History) > 40 {
-		l.ChatModel.History = l.ChatModel.History[len(l.ChatModel.History)-40:]
+	//保留对话上下文
+	if len(l.ChatModel.History) > utils.GetChatContext()*2 {
+		l.ChatModel.History = l.ChatModel.History[len(l.ChatModel.History)-utils.GetChatContext()*2:]
 	}
 	l.mu.Unlock()
 	return answer, nil

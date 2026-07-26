@@ -44,6 +44,7 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 			Info:   err.Error(),
 			Data:   nil,
 		})
+		return
 	}
 	continueDTO, err := sv.ContinueChat(continueModel)
 	if err != nil {
@@ -52,6 +53,7 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 			Info:   err.Error(),
 			Data:   nil,
 		})
+		return
 	}
 	c.JSON(200, model.FinalResponse{
 		Status: "200",
@@ -68,6 +70,7 @@ func InitDeleteChat(ctx context.Context, c *app.RequestContext) {
 			Info:   err.Error(),
 			Data:   nil,
 		})
+		return
 	}
 	err = sv.DeleteChat(chatDeleteModel)
 	if err != nil {
@@ -76,6 +79,7 @@ func InitDeleteChat(ctx context.Context, c *app.RequestContext) {
 			Info:   err.Error(),
 			Data:   nil,
 		})
+		return
 	}
 	c.JSON(200, model.FinalResponse{
 		Status: "200",

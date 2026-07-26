@@ -15,11 +15,11 @@ type SearchResult struct {
 	Resource  string  // wiki_resource
 	FilePath  string
 	Language  string
-	startLine int64
-	endLine   int64
+	StartLine int64
+	EndLine   int64
 }
 
-// Search 调用前无比调用loadCollections函数
+// Search 调用前务必调用loadCollections函数
 func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]SearchResult, error) {
 	vectors, err := p.EmbeddingHandler(ctx, []string{queryText})
 	if err != nil {
@@ -30,7 +30,13 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 		p.CollectionName,
 		topK,
 		[]entity.Vector{entity.FloatVector(queryVector)},
-	).WithOutputFields("wiki_varchar", "wiki_resource").
+	).WithOutputFields("wiki_varchar",
+		"wiki_resource",
+		"file_path",
+		"start_line",
+		"end_line",
+		"language",
+	).
 		WithANNSField("wiki_vector")
 	searchResult, err := p.MilvusClient.Search(ctx, searchOption)
 	if err != nil {
@@ -83,10 +89,10 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 				Score:     float64(res.Scores[i]),
 				Text:      texts[i],
 				Resource:  resources[i],
-				FilePath:  path[i],
-				Language:  language[i],
-				startLine: startLine[i],
-				endLine:   endLine[i],
+				FilePath:  "仓库相对路径" + path[i],
+				Language:  "使用语言：" + language[i],
+				StartLine: startLine[i],
+				EndLine:   endLine[i],
 			})
 		}
 	}

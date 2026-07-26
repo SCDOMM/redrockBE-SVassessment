@@ -3,6 +3,7 @@ package api
 import (
 	"Main/model"
 	"Main/sv"
+	"Main/utils"
 	"context"
 	"strconv"
 
@@ -12,6 +13,7 @@ import (
 func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 	ingestModel := model.IngestNewModel{}
 	err := c.BindJSON(&ingestModel)
+
 	if err != nil {
 		c.JSON(400, model.FinalResponse{
 			Status: "400",
@@ -20,7 +22,15 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-	ingestDTO, err := sv.NewIngest(ingestModel.RepoUrl)
+
+	if ingestModel.ExcludePatterns == nil {
+		ingestModel.ExcludePatterns = utils.GetDefaultExclude()
+	}
+	if ingestModel.IncludePatterns == nil {
+		ingestModel.IncludePatterns = utils.GetDefaultInclude()
+	}
+
+	ingestDTO, err := sv.NewIngest(ingestModel)
 	if err != nil {
 		c.JSON(400, model.FinalResponse{
 			Status: "500",

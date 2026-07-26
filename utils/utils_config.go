@@ -16,16 +16,19 @@ var (
 var _ = yaml.Unmarshal
 
 type ConfigData struct {
-	AiConfig      AiConfig      `yaml:"AiConfig"`
-	MilvusConfig  MilvusConfig  `yaml:"MilvusConfig"`
-	GeneralConfig GeneralConfig `yaml:"GeneralConfig"`
-	NetworkConfig NetworkConfig `yaml:"NetworkConfig"`
-	MySQLConfig   MySQLConfig   `yaml:"MySQLConfig"`
+	AiConfig       AiConfig      `yaml:"AiConfig"`
+	MilvusConfig   MilvusConfig  `yaml:"MilvusConfig"`
+	GeneralConfig  GeneralConfig `yaml:"GeneralConfig"`
+	NetworkConfig  NetworkConfig `yaml:"NetworkConfig"`
+	MySQLConfig    MySQLConfig   `yaml:"MySQLConfig"`
+	DefaultInclude []string      `yaml:"DefaultInclude"`
+	DefaultExclude []string      `yaml:"DefaultExclude"`
 }
 type AiConfig struct {
 	ChatApiKey  string `yaml:"chat_api_key"`
 	ChatUrl     string `yaml:"chat_url"`
 	ChatModel   string `yaml:"chat_model"`
+	ChatContext int    `yaml:"chat_context"`
 	EmbedApiKey string `yaml:"embed_api_key"`
 	EmbedUrl    string `yaml:"embed_url"`
 	EmbedModel  string `yaml:"embed_model"`
@@ -86,6 +89,9 @@ func GetCollectionsName() string {
 func GetChatModel() string {
 	return configData.AiConfig.ChatModel
 }
+func GetChatContext() int {
+	return configData.AiConfig.ChatContext
+}
 func GetMachineId() int64 {
 	return configData.GeneralConfig.MachineId
 }
@@ -112,4 +118,10 @@ func GetDataBasePassword() string {
 }
 func GetDataBaseExtraConfig() string {
 	return configData.MySQLConfig.ExtraConfig
+}
+func GetDefaultInclude() []string {
+	return configData.DefaultInclude
+}
+func GetDefaultExclude() []string {
+	return configData.DefaultExclude
 }

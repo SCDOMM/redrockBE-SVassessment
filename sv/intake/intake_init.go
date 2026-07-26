@@ -1,6 +1,7 @@
 package intake
 
 import (
+	"Main/model"
 	"Main/utils"
 	"fmt"
 	"io/fs"
@@ -22,6 +23,8 @@ type IntakeTask struct {
 	TempDir      string
 	TotalFiles   int
 	IndexedFiles int
+	Include      []string
+	Exclude      []string
 	CreatedAt    time.Time
 	mu           sync.Mutex
 	Error        []string
@@ -48,16 +51,18 @@ func (t *IntakeTask) SafeSetError(err error) {
 	t.Error = append(t.Error, err.Error())
 }
 
-func CreateIntakeTask(repoURL string) (IntakeTask, error) {
+func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 	snowFlake := utils.NewSnowflake(utils.GetMachineId())
 	id := snowFlake.GenerateID()
 	task := IntakeTask{
 		ID:           id,
-		RepoURL:      repoURL,
+		RepoURL:      newIntakeModel.RepoUrl,
 		Status:       "pending",
 		Progress:     0.0,
 		TotalFiles:   0,
 		IndexedFiles: 0,
+		Include:      newIntakeModel.IncludePatterns,
+		Exclude:      newIntakeModel.ExcludePatterns,
 		CreatedAt:    time.Now(),
 		Error:        nil,
 	}
@@ -73,7 +78,7 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 
 	//克隆仓库
 	_, err = git.PlainClone(tempDir, false, &git.CloneOptions{
-		URL:   repoURL,
+		URL:   newIntakeModel.RepoUrl,
 		Depth: 1,
 	})
 	if err != nil {
@@ -101,7 +106,7 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 			return nil
 		}
 		// 检查文件是否应该被索引
-		if isIndexableFile(path, d) {
+		if isIndexableFile(path,task.Include,task.Exclude, d) {
 			fileCount++
 		}
 		return nil
@@ -117,43 +122,35 @@ func CreateIntakeTask(repoURL string) (IntakeTask, error) {
 	}
 
 	task.TotalFiles = fileCount
+
 	return task, nil
 }
 
-func isIndexableFile(path string, d fs.DirEntry) bool {
+func isIndexableFile(path string, include []string, exclude []string, d fs.DirEntry) bool {
 	info, err := d.Info()
 	if err != nil {
 		return false
 	}
-	if info.Size() > 1*1024*1024 {
+	if info.Size() > 1*1024*1024 { // 1MB
 		return false
 	}
-	// 根据扩展名过滤二进制文件
 	ext := strings.ToLower(filepath.Ext(path))
-	binaryExts := map[string]bool{
-		".png": true, ".jpg": true, ".jpeg": true, ".gif": true, ".bmp": true,
-		".ico": true, ".svg": true, ".webp": true,
-		".mp3": true, ".wav": true, ".mp4": true, ".avi": true,
-		".pdf": true, ".doc": true, ".docx": true, ".xls": true, ".xlsx": true,
-		".zip": true, ".tar": true, ".gz": true, ".bz2": true,
-		".exe": true, ".dll": true, ".so": true, ".dylib": true,
-		".bin": true, ".obj": true, ".lib": true,
-		".ttf": true, ".otf": true, ".woff": true,
+
+	//过滤不包含文件
+	excludeMap := make(map[string]bool, len(exclude))
+	for _, e := range exclude {
+		excludeMap[strings.ToLower(e)] = true
 	}
-	if binaryExts[ext] {
+	if excludeMap[ext] {
 		return false
 	}
-	// 只索引文本/代码文件
-	codeExts := map[string]bool{
-		".go": true, ".py": true, ".js": true, ".ts": true, ".java": true,
-		".c": true, ".cpp": true, ".h": true, ".hpp": true, ".cs": true,
-		".rb": true, ".php": true, ".swift": true, ".kt": true, ".scala": true,
-		".rs": true, ".sh": true, ".bash": true, ".zsh": true,
-		".yaml": true, ".yml": true, ".json": true, ".xml": true, ".toml": true,
-		".md": true, ".txt": true, ".html": true, ".css": true, ".scss": true,
-		".sql": true, ".r": true, ".m": true, ".mm": true,
+
+	//保留包含文件
+	includeMap := make(map[string]bool, len(include))
+	for _, i := range include {
+		includeMap[strings.ToLower(i)] = true
 	}
-	if codeExts[ext] {
+	if includeMap[ext] {
 		return true
 	}
 	return false

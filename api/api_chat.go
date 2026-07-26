@@ -49,7 +49,7 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 	continueDTO, err := sv.ContinueChat(continueModel)
 	if err != nil {
 		c.JSON(500, model.FinalResponse{
-			Status: "400",
+			Status: "500",
 			Info:   err.Error(),
 			Data:   nil,
 		})

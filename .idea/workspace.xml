@@ -7,21 +7,7 @@
     <list default="true" id="0f3da39e-b78a-4fa5-b8c0-107290304ffb" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_chat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_ingest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/model_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/model_chat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/model_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/model_ingest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/router/router_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/router/router_init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/intake/intake_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/intake/intake_process.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_process.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/llm/llm_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/llm/llm_chat.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sv/rag/rag_embedding.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_embedding.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/rag/rag_insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_insert.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/rag/rag_search.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_search.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/sv_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/sv_chat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/sv_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/sv_ingest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils_config.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_config.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,61 +28,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="0.03060877945082974" />
-      <entry key="MS500" value="0.5853964365736863" />
-      <entry key="S2" value="1.7257358029510752" />
-      <entry key="S5" value="2.6664146026864715" />
-      <entry key="S10" value="3.749710248786356" />
-      <entry key="S30" value="6.747232512291352" />
-      <entry key="S60" value="10.033976406216972" />
-      <entry key="M2" value="18.100408249339154" />
-      <entry key="M5" value="44.713199746812016" />
-      <entry key="M10" value="87.20249557361049" />
-      <entry key="M15" value="123.93223324828715" />
-      <entry key="M30" value="199.08541191887426" />
-      <entry key="H1" value="303.8686591406615" />
-      <entry key="H2" value="530.0207598167098" />
-      <entry key="H4" value="974.8349702049591" />
-      <entry key="D1" value="2382.320229902313" />
-      <entry key="W1" value="2921.886314803101" />
+      <entry key="MS100" value="1.0000912383594958" />
+      <entry key="MS500" value="1.1635986499495035" />
+      <entry key="S2" value="2.4619699249150004" />
+      <entry key="S5" value="4.199408645399181" />
+      <entry key="S10" value="5.332551779256508" />
+      <entry key="S30" value="6.700352630356015" />
+      <entry key="S60" value="9.091490446384725" />
+      <entry key="M2" value="15.53456250594899" />
+      <entry key="M5" value="37.35506278636196" />
+      <entry key="M10" value="77.0496295067769" />
+      <entry key="M15" value="114.51742495668057" />
+      <entry key="M30" value="197.37693929163225" />
+      <entry key="H1" value="311.27972440112933" />
+      <entry key="H2" value="541.4915993995722" />
+      <entry key="H4" value="988.6137099304882" />
+      <entry key="D1" value="2411.625811329108" />
+      <entry key="W1" value="2960.011280734618" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000000467648564" />
-      <entry key="MS500" value="1.0341972682091156" />
-      <entry key="S2" value="1.4768073002225963" />
-      <entry key="S5" value="2.290319631405981" />
-      <entry key="S10" value="3.4515728780347987" />
-      <entry key="S30" value="6.348580783611302" />
-      <entry key="S60" value="8.659843770905631" />
-      <entry key="M2" value="11.341989800858572" />
-      <entry key="M5" value="15.491311359697182" />
-      <entry key="M10" value="19.10246233666233" />
-      <entry key="M15" value="21.453886070141294" />
-      <entry key="M30" value="26.864131944648864" />
-      <entry key="H1" value="40.903774176861035" />
-      <entry key="H2" value="82.45516868698711" />
-      <entry key="H4" value="167.49885277215634" />
-      <entry key="D1" value="433.1302050233271" />
-      <entry key="W1" value="533.3723298406794" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="2.238727638067119E-74" />
+      <entry key="S2" value="3.8681233538539137E-19" />
+      <entry key="S5" value="4.31533797801629E-8" />
+      <entry key="S10" value="2.0894268504599982E-4" />
+      <entry key="S30" value="0.07362155081270018" />
+      <entry key="S60" value="0.4823151551650393" />
+      <entry key="M2" value="2.0012591033711824" />
+      <entry key="M5" value="7.927121904997927" />
+      <entry key="M10" value="15.047042812837885" />
+      <entry key="M15" value="19.55892536122882" />
+      <entry key="M30" value="27.926085586879783" />
+      <entry key="H1" value="43.35556754965088" />
+      <entry key="H2" value="84.95259839978124" />
+      <entry key="H4" value="169.9679781249303" />
+      <entry key="D1" value="438.1822901479197" />
+      <entry key="W1" value="540.0295521047742" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.0341472085476873" />
-      <entry key="MS500" value="0.7765602974725355" />
-      <entry key="S2" value="2.6359268320433986" />
-      <entry key="S5" value="4.537651908985511" />
-      <entry key="S10" value="6.852786418185707" />
-      <entry key="S30" value="12.848733207769568" />
-      <entry key="S60" value="18.514768607507918" />
-      <entry key="M2" value="29.313901329319204" />
-      <entry key="M5" value="60.119265160584646" />
-      <entry key="M10" value="106.24469156409648" />
-      <entry key="M15" value="145.33790414373254" />
-      <entry key="M30" value="225.91649129068057" />
-      <entry key="H1" value="344.744239970385" />
-      <entry key="H2" value="612.4438209456844" />
-      <entry key="H4" value="1142.2995889998892" />
-      <entry key="D1" value="2815.4355967878255" />
-      <entry key="W1" value="3455.2560398511664" />
+      <entry key="MS100" value="0.9527267414856547" />
+      <entry key="MS500" value="1.1530110873711064" />
+      <entry key="S2" value="2.456831190748534" />
+      <entry key="S5" value="4.195816654292627" />
+      <entry key="S10" value="5.330427533839989" />
+      <entry key="S30" value="6.771140281758069" />
+      <entry key="S60" value="9.564996135426641" />
+      <entry key="M2" value="17.51515300013712" />
+      <entry key="M5" value="45.24324493632023" />
+      <entry key="M10" value="92.0543154860482" />
+      <entry key="M15" value="134.03698060064724" />
+      <entry key="M30" value="225.2718851073627" />
+      <entry key="H1" value="354.6075993091372" />
+      <entry key="H2" value="626.4125486309499" />
+      <entry key="H4" value="1158.5477418605756" />
+      <entry key="D1" value="2849.793225258047" />
+      <entry key="W1" value="3500.038214786633" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -111,31 +97,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go 构建.go build DickWiki.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.GoLinterPluginOnboardingV2": "true",
-    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
-    "RunOnceActivity.GoOptimizationToolWindowEnableInLayout.v333333": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.analysis.ui.options.defaults": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/a9776",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "D:/Go_demo/DickWiki/main.go",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "http.proxy"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go 构建.go build DickWiki.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginOnboardingV2&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoOptimizationToolWindowEnableInLayout.v333333&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.analysis.ui.options.defaults&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/a9776&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;D:/Go_demo/DickWiki/main.go&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Go_demo\DickWiki\llm" />

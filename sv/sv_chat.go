@@ -81,6 +81,14 @@ func ContinueChat(continueModel model.ChatContinueModel) (model.ChatContinueDTO,
 		Answer: answer,
 	}, err
 }
+func GetChat(chatId int64) (model.ChatModel, error) {
+	chatModel, err := dao.GetChat(chatId)
+	if err != nil {
+		return model.ChatModel{}, err
+	}
+	return *chatModel, err
+}
+
 func DeleteChat(deleteModel model.ChatDeleteModel) error {
 	err := dao.DeleteChat(deleteModel.ChatId)
 	if err != nil {

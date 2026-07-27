@@ -32,6 +32,7 @@ func (p *Pipeline) CreateCollection(ctx context.Context) error {
 }
 func (p *Pipeline) CreateIndex(ctx context.Context, overwrite bool, autoIndex bool) error {
 	if overwrite {
+		_ = p.MilvusClient.ReleaseCollection(ctx, milvusclient.NewReleaseCollectionOption(p.CollectionName))
 		err := p.MilvusClient.DropIndex(ctx, milvusclient.NewDropIndexOption(p.CollectionName, "wiki_vector"))
 		if err != nil {
 			return fmt.Errorf("rag:fail to override index %w", err)

@@ -4,6 +4,7 @@ import (
 	"Main/model"
 	"Main/sv"
 	"context"
+	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -60,6 +61,31 @@ func InitContinueChat(ctx context.Context, c *app.RequestContext) {
 		Info:   "success",
 		Data:   continueDTO,
 	})
+}
+func InitGetChat(ctx context.Context, c *app.RequestContext) {
+	taskId := c.Param("id")
+	id, err := strconv.Atoi(taskId)
+	if err != nil {
+		c.JSON(500, model.FinalResponse{
+			Status: "500",
+			Info:   err.Error(),
+			Data:   nil,
+		})
+	}
+	chatModel, err := sv.GetChat(int64(id))
+	if err != nil {
+		c.JSON(500, model.FinalResponse{
+			Status: "500",
+			Info:   err.Error(),
+			Data:   nil,
+		})
+	}
+	c.JSON(200, model.FinalResponse{
+		Status: "200",
+		Info:   "success",
+		Data:   chatModel,
+	})
+
 }
 func InitDeleteChat(ctx context.Context, c *app.RequestContext) {
 	chatDeleteModel := model.ChatDeleteModel{}

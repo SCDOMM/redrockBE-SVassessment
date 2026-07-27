@@ -3,6 +3,7 @@ package dao
 import (
 	"Main/model"
 	"Main/utils"
+	"context"
 	"log"
 	"sync"
 
@@ -34,5 +35,8 @@ func init() {
 			log.Println("数据库建表失败！")
 			panic(err1)
 		}
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		go StartCleanChat(ctx)
 	})
 }

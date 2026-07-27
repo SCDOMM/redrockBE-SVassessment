@@ -23,8 +23,8 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	if ingestModel.FilterPath==nil {
-		ingestModel.FilterPath=utils.GetDefaultFilterPath()
+	if ingestModel.FilterPath == nil {
+		ingestModel.FilterPath = utils.GetDefaultFilterPath()
 	}
 
 	if ingestModel.ExcludePatterns == nil {
@@ -36,7 +36,7 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 
 	ingestDTO, err := sv.NewIngest(ingestModel)
 	if err != nil {
-		c.JSON(400, model.FinalResponse{
+		c.JSON(500, model.FinalResponse{
 			Status: "500",
 			Info:   err.Error(),
 			Data:   nil,
@@ -54,14 +54,14 @@ func InitCheckIngest(ctx context.Context, c *app.RequestContext) {
 	id, err := strconv.Atoi(taskId)
 	if err != nil {
 		c.JSON(500, model.FinalResponse{
-			Status: "400",
+			Status: "500",
 			Info:   err.Error(),
 			Data:   nil,
 		})
 	}
 	checkDTO, err := sv.CheckIngest(int64(id))
 	if err != nil {
-		c.JSON(400, model.FinalResponse{
+		c.JSON(500, model.FinalResponse{
 			Status: "500",
 			Info:   err.Error(),
 			Data:   nil,
@@ -86,7 +86,7 @@ func InitCancelIngest(ctx context.Context, c *app.RequestContext) {
 	}
 	err = sv.CancelIngest(ingestModel.TaskId)
 	if err != nil {
-		c.JSON(400, model.FinalResponse{
+		c.JSON(500, model.FinalResponse{
 			Status: "500",
 			Info:   err.Error(),
 			Data:   nil,

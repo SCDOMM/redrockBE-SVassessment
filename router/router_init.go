@@ -19,6 +19,7 @@ func InitRouter() {
 	g2 := h.Group("/api/chat")
 	g2.POST("/new", api.InitNewChat)
 	g2.POST("/continue", api.InitContinueChat)
+	g2.GET("/:id/get", api.InitGetChat)
 	g2.POST("/delete", api.InitDeleteChat)
 
 	h.Spin()

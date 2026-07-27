@@ -2,8 +2,9 @@ package model
 
 type IngestNewModel struct {
 	RepoUrl         string   `json:"repo_url"`
-	IncludePatterns []string `json:"include_patterns"`
-	ExcludePatterns []string `json:"exclude_patterns"`
+	FilterPath      []string `json:"filter_path,omitempty"`
+	IncludePatterns []string `json:"include_patterns,omitempty"`
+	ExcludePatterns []string `json:"exclude_patterns,omitempty"`
 }
 
 type IngestNewDTO struct {

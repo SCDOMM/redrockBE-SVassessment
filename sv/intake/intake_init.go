@@ -23,6 +23,7 @@ type IntakeTask struct {
 	TempDir      string
 	TotalFiles   int
 	IndexedFiles int
+	FilterPath   []string
 	Include      []string
 	Exclude      []string
 	CreatedAt    time.Time
@@ -61,6 +62,7 @@ func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 		Progress:     0.0,
 		TotalFiles:   0,
 		IndexedFiles: 0,
+		FilterPath:   newIntakeModel.FilterPath,
 		Include:      newIntakeModel.IncludePatterns,
 		Exclude:      newIntakeModel.ExcludePatterns,
 		CreatedAt:    time.Now(),
@@ -106,7 +108,7 @@ func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 			return nil
 		}
 		// 检查文件是否应该被索引
-		if isIndexableFile(path,task.Include,task.Exclude, d) {
+		if isIndexableFile(path, task.Include, task.Exclude, d) {
 			fileCount++
 		}
 		return nil

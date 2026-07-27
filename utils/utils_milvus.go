@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/milvus-io/milvus/client/v2/milvusclient"
 )
@@ -56,4 +57,31 @@ func CheckCollections(ctx context.Context, collectionName string) error {
 			f.Name, f.DataType, dim, f.AutoID, f.PrimaryKey)
 	}
 	return nil
+}
+func BuildFilterExpr(filterPaths []string) string {
+	if len(filterPaths) == 0 {
+		return ""
+	}
+	var conds []string
+	for _, fp := range filterPaths {
+		fp = strings.TrimSpace(fp)
+		if fp == "" {
+			continue
+		}
+		var expr string
+		if strings.HasSuffix(fp, "/") {
+			// 目录过滤：like "path%"
+			expr = fmt.Sprintf(`file_path like "%s%s"`, fp, "%") // 如 "src/%"
+		} else if strings.HasPrefix(fp, ".") {
+			// 文件后缀：like "%.suffix"
+			expr = fmt.Sprintf(`file_path like "%%%s"`, fp) // 如 "%.go"
+		} else {
+			expr = fmt.Sprintf(`file_path == "%s"`, fp)
+		}
+		conds = append(conds, expr)
+	}
+	if len(conds) == 0 {
+		return ""
+	}
+	return strings.Join(conds, " and ")
 }

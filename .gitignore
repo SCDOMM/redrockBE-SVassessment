@@ -23,7 +23,7 @@ profile.cov
 # Go workspace file
 go.work
 go.work.sum
-config.yaml
+config1.yaml
 
 # env file
 .env

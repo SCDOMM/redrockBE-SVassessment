@@ -21,6 +21,8 @@ MySQLConfig:
   port: 3306 #MySQL端口
   database_name: dickwiki #在MySQL中储存AI对话上下文时用到的数据库名
   extra_config: ?charset=utf8mb4&parseTime=True&loc=Local #额外配置
+DefaultFilterPath: #读取仓库时默认忽略的文件夹名，如果用户不传入，就使用它
+  [".git",".idea","vendor","bin","obj","node_modules"]
 DefaultExclude: #读取仓库时默认忽略的后缀名，如果用户不传入，就使用它
   [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp", ".mp3", ".wav", ".mp4", ".avi", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".zip", ".tar", ".gz", ".bz2", ".exe", ".dll", ".so", ".dylib", ".bin", ".obj", ".lib", ".ttf", ".otf", ".woff"]
 DefaultInclude: #读取仓库时默认包括的后缀名，如果用户不传入，就使用它

@@ -18,7 +18,7 @@ func repeat(s string, n int) []string {
 }
 
 // InsertDocument 插入文本(按行分割文本)
-func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource string, filePath string, language string) error {
+func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource string, filePath string, fileHash string, language string) error {
 	chunks, startLines, endLines := p.Chunker.SplitByLines(docText)
 	if len(chunks) == 0 {
 		return fmt.Errorf("empty document")
@@ -46,6 +46,7 @@ func (p *Pipeline) InsertDocument(ctx context.Context, docText string, resource 
 			column.NewColumnFloatVector("wiki_vector", int(utils.GetEmbedDim()), vectors),
 			column.NewColumnVarChar("wiki_resource", repeat(resource, len(batchChunks))),
 			column.NewColumnVarChar("file_path", repeat(filePath, len(batchChunks))),
+			column.NewColumnVarChar("file_hash", repeat(fileHash, len(batchChunks))),
 			column.NewColumnInt64("start_line", batchStartLines),
 			column.NewColumnInt64("end_line", batchEndLines),
 			column.NewColumnVarChar("language", repeat(language, len(batchChunks))),

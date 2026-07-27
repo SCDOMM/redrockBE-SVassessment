@@ -3,6 +3,7 @@ package rag
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/milvus-io/milvus/client/v2/column"
 	"github.com/milvus-io/milvus/client/v2/entity"
@@ -20,12 +21,24 @@ type SearchResult struct {
 }
 
 // Search 调用前务必调用loadCollections函数
-func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]SearchResult, error) {
+func (p *Pipeline) Search(ctx context.Context, queryText string, topK int, filterConfig string, repoUrl string) ([]SearchResult, error) {
 	vectors, err := p.EmbeddingHandler(ctx, []string{queryText})
 	if err != nil {
 		return nil, fmt.Errorf("rag:fail to embed query %w", err)
 	}
 	queryVector := vectors[0]
+
+	//设置过滤条件
+	var filterParts []string
+	if filterConfig != "" {
+		filterParts = append(filterParts, "("+filterConfig+")") // 加括号防优先级错误
+	}
+	if repoUrl != "" {
+		escaped := strings.ReplaceAll(repoUrl, "'", "\\'")
+		filterParts = append(filterParts, fmt.Sprintf("wiki_resource == '%s'", escaped))
+	}
+	finalFilter := strings.Join(filterParts, " and ")
+
 	searchOption := milvusclient.NewSearchOption(
 		p.CollectionName,
 		topK,
@@ -36,8 +49,12 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 		"start_line",
 		"end_line",
 		"language",
-	).
-		WithANNSField("wiki_vector")
+	).WithANNSField("wiki_vector")
+
+	if finalFilter != "" {
+		searchOption = searchOption.WithFilter(finalFilter)
+	}
+
 	searchResult, err := p.MilvusClient.Search(ctx, searchOption)
 	if err != nil {
 		return nil, fmt.Errorf("rag:fail to search %w", err)
@@ -89,8 +106,8 @@ func (p *Pipeline) Search(ctx context.Context, queryText string, topK int) ([]Se
 				Score:     float64(res.Scores[i]),
 				Text:      texts[i],
 				Resource:  resources[i],
-				FilePath:  "仓库相对路径" + path[i],
-				Language:  "使用语言：" + language[i],
+				FilePath:  path[i],
+				Language:  language[i],
 				StartLine: startLine[i],
 				EndLine:   endLine[i],
 			})

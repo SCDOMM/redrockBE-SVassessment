@@ -23,6 +23,10 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	if ingestModel.FilterPath==nil {
+		ingestModel.FilterPath=utils.GetDefaultFilterPath()
+	}
+
 	if ingestModel.ExcludePatterns == nil {
 		ingestModel.ExcludePatterns = utils.GetDefaultExclude()
 	}

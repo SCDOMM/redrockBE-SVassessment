@@ -16,8 +16,9 @@ type ChatModel struct {
 	DeletedAt gorm.DeletedAt                           `gorm:"index" json:"deleted_at"`
 }
 type ChatNewModel struct {
-	RepoUrl  string `json:"repo_url"`
-	Question string `json:"question"`
+	RepoUrl    string   `json:"repo_url,omitempty"`
+	Question   string   `json:"question"`
+	FilterPath []string `json:"filter_path,omitempty"`
 }
 type ChatNewDTO struct {
 	ChatId int64  `json:"chat_id"`
@@ -25,8 +26,10 @@ type ChatNewDTO struct {
 }
 
 type ChatContinueModel struct {
-	ChatId   int64  `json:"chat_id"`
-	Question string `json:"question"`
+	ChatId     int64    `json:"chat_id"`
+	RepoUrl    string   `json:"repo_url,omitempty"`
+	Question   string   `json:"question"`
+	FilterPath []string `json:"filter_path,omitempty"`
 }
 type ChatContinueDTO struct {
 	Answer string `json:"answer"`

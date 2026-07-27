@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f3da39e-b78a-4fa5-b8c0-107290304ffb" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_chat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sv/rag/rag_embedding.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_embedding.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/api_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_ingest.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/model_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/model_chat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/model_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/model_ingest.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/intake/intake_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/intake/intake_process.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_process.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/rag/rag_insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_insert.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/rag/rag_milvus.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_milvus.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/rag/rag_search.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_search.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/sv_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/sv_chat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils_config.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils_milvus.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_milvus.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,61 +39,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000912383594958" />
-      <entry key="MS500" value="1.1635986499495035" />
-      <entry key="S2" value="2.4619699249150004" />
-      <entry key="S5" value="4.199408645399181" />
-      <entry key="S10" value="5.332551779256508" />
-      <entry key="S30" value="6.700352630356015" />
-      <entry key="S60" value="9.091490446384725" />
-      <entry key="M2" value="15.53456250594899" />
-      <entry key="M5" value="37.35506278636196" />
-      <entry key="M10" value="77.0496295067769" />
-      <entry key="M15" value="114.51742495668057" />
-      <entry key="M30" value="197.37693929163225" />
-      <entry key="H1" value="311.27972440112933" />
-      <entry key="H2" value="541.4915993995722" />
-      <entry key="H4" value="988.6137099304882" />
-      <entry key="D1" value="2411.625811329108" />
-      <entry key="W1" value="2960.011280734618" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000002139596607" />
+      <entry key="S2" value="1.0359100759136193" />
+      <entry key="S5" value="1.4003721716199442" />
+      <entry key="S10" value="1.9030702661269705" />
+      <entry key="S30" value="3.435450547306788" />
+      <entry key="S60" value="6.366374073878228" />
+      <entry key="M2" value="11.314384980143103" />
+      <entry key="M5" value="23.324184909378673" />
+      <entry key="M10" value="40.580748324896135" />
+      <entry key="M15" value="56.96716104074501" />
+      <entry key="M30" value="109.78692033736115" />
+      <entry key="H1" value="223.89754186014645" />
+      <entry key="H2" value="457.109332748375" />
+      <entry key="H4" value="911.5003896178866" />
+      <entry key="D1" value="2502.1545766018407" />
+      <entry key="W1" value="3157.770784521206" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.238727638067119E-74" />
-      <entry key="S2" value="3.8681233538539137E-19" />
-      <entry key="S5" value="4.31533797801629E-8" />
-      <entry key="S10" value="2.0894268504599982E-4" />
-      <entry key="S30" value="0.07362155081270018" />
-      <entry key="S60" value="0.4823151551650393" />
-      <entry key="M2" value="2.0012591033711824" />
-      <entry key="M5" value="7.927121904997927" />
-      <entry key="M10" value="15.047042812837885" />
-      <entry key="M15" value="19.55892536122882" />
-      <entry key="M30" value="27.926085586879783" />
-      <entry key="H1" value="43.35556754965088" />
-      <entry key="H2" value="84.95259839978124" />
-      <entry key="H4" value="169.9679781249303" />
-      <entry key="D1" value="438.1822901479197" />
-      <entry key="W1" value="540.0295521047742" />
+      <entry key="MS100" value="3.889393644660249E-282" />
+      <entry key="MS500" value="6.953219729880441E-57" />
+      <entry key="S2" value="1.4952538591352938E-14" />
+      <entry key="S5" value="4.46189911264985E-6" />
+      <entry key="S10" value="0.0029861403093271325" />
+      <entry key="S30" value="0.2292377176490506" />
+      <entry key="S60" value="0.7098486083883389" />
+      <entry key="M2" value="1.5277442817066422" />
+      <entry key="M5" value="4.312419036319992" />
+      <entry key="M10" value="8.93305284036431" />
+      <entry key="M15" value="13.115159138226463" />
+      <entry key="M30" value="25.036311885572164" />
+      <entry key="H1" value="46.306120211532324" />
+      <entry key="H2" value="88.32286621611902" />
+      <entry key="H4" value="172.97805276265603" />
+      <entry key="D1" value="471.02818577067984" />
+      <entry key="W1" value="592.7251051089165" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9527267414856547" />
-      <entry key="MS500" value="1.1530110873711064" />
-      <entry key="S2" value="2.456831190748534" />
-      <entry key="S5" value="4.195816654292627" />
-      <entry key="S10" value="5.330427533839989" />
-      <entry key="S30" value="6.771140281758069" />
-      <entry key="S60" value="9.564996135426641" />
-      <entry key="M2" value="17.51515300013712" />
-      <entry key="M5" value="45.24324493632023" />
-      <entry key="M10" value="92.0543154860482" />
-      <entry key="M15" value="134.03698060064724" />
-      <entry key="M30" value="225.2718851073627" />
-      <entry key="H1" value="354.6075993091372" />
-      <entry key="H2" value="626.4125486309499" />
-      <entry key="H4" value="1158.5477418605756" />
-      <entry key="D1" value="2849.793225258047" />
-      <entry key="W1" value="3500.038214786633" />
+      <entry key="MS100" value="0.9659363289248456" />
+      <entry key="MS500" value="0.9930925808138313" />
+      <entry key="S2" value="1.0241024661243454" />
+      <entry key="S5" value="1.3466627818343553" />
+      <entry key="S10" value="1.8422191476764065" />
+      <entry key="S30" value="3.609103621745234" />
+      <entry key="S60" value="7.02475561038603" />
+      <entry key="M2" value="12.798458660106194" />
+      <entry key="M5" value="27.59486119038586" />
+      <entry key="M10" value="49.47204036239169" />
+      <entry key="M15" value="70.0418749170069" />
+      <entry key="M30" value="134.78565789818674" />
+      <entry key="H1" value="270.1696981956693" />
+      <entry key="H2" value="545.3988365911482" />
+      <entry key="H4" value="1084.444303963245" />
+      <entry key="D1" value="2973.1668842869094" />
+      <entry key="W1" value="3750.4930324966117" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -228,5 +239,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/sv/sv_chat.go</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

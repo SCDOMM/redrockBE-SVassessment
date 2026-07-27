@@ -4,6 +4,7 @@ import (
 	"Main/dao"
 	"Main/model"
 	"Main/sv/llm"
+	"Main/utils"
 	"context"
 	"fmt"
 )
@@ -15,7 +16,9 @@ func NewChat(newModel model.ChatNewModel) (model.ChatNewDTO, error) {
 		return model.ChatNewDTO{}, err
 	}
 
-	result, err := pipeline.Search(ctx, newModel.Question, 5)
+	filterConfig := utils.BuildFilterExpr(newModel.FilterPath)
+
+	result, err := pipeline.Search(ctx, newModel.Question, 5, filterConfig, newModel.RepoUrl)
 	if err != nil {
 		return model.ChatNewDTO{}, err
 	}
@@ -53,7 +56,10 @@ func ContinueChat(continueModel model.ChatContinueModel) (model.ChatContinueDTO,
 	if err != nil {
 		return model.ChatContinueDTO{}, err
 	}
-	result, err := pipeline.Search(ctx, continueModel.Question, 5)
+
+	filterConfig := utils.BuildFilterExpr(continueModel.FilterPath)
+
+	result, err := pipeline.Search(ctx, continueModel.Question, 5, filterConfig, continueModel.RepoUrl)
 	if err != nil {
 		return model.ChatContinueDTO{}, err
 	}

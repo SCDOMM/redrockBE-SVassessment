@@ -16,13 +16,14 @@ var (
 var _ = yaml.Unmarshal
 
 type ConfigData struct {
-	AiConfig       AiConfig      `yaml:"AiConfig"`
-	MilvusConfig   MilvusConfig  `yaml:"MilvusConfig"`
-	GeneralConfig  GeneralConfig `yaml:"GeneralConfig"`
-	NetworkConfig  NetworkConfig `yaml:"NetworkConfig"`
-	MySQLConfig    MySQLConfig   `yaml:"MySQLConfig"`
-	DefaultInclude []string      `yaml:"DefaultInclude"`
-	DefaultExclude []string      `yaml:"DefaultExclude"`
+	AiConfig          AiConfig      `yaml:"AiConfig"`
+	MilvusConfig      MilvusConfig  `yaml:"MilvusConfig"`
+	GeneralConfig     GeneralConfig `yaml:"GeneralConfig"`
+	NetworkConfig     NetworkConfig `yaml:"NetworkConfig"`
+	MySQLConfig       MySQLConfig   `yaml:"MySQLConfig"`
+	DefaultInclude    []string      `yaml:"DefaultInclude"`
+	DefaultExclude    []string      `yaml:"DefaultExclude"`
+	DefaultFilterPath []string      `yaml:"DefaultFilterPath"`
 }
 type AiConfig struct {
 	ChatApiKey  string `yaml:"chat_api_key"`
@@ -124,4 +125,7 @@ func GetDefaultInclude() []string {
 }
 func GetDefaultExclude() []string {
 	return configData.DefaultExclude
+}
+func GetDefaultFilterPath() []string {
+	return configData.DefaultFilterPath
 }

@@ -58,7 +58,19 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 	defer os.RemoveAll(task.TempDir)
 	task.SafeSetStatus("running")
 	resource := task.RepoURL
+
+	//加载索引和集合
+	if err := pipeline.CreateIndex(ctx, true, true); err != nil {
+		task.SafeSetError(fmt.Errorf("创建索引失败: %v", err))
+		return err
+	}
+	err := pipeline.LoadCollections(ctx)
+
 	//获取映射
+	if err != nil {
+		task.SafeSetError(fmt.Errorf("加载集合失败: %w", err))
+		return err
+	}
 	existingFiles, err := pipeline.GetFileRecords(ctx, resource)
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("查询已有文件记录失败: %w", err))
@@ -205,10 +217,7 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 		task.SafeSetError(fmt.Errorf("第二次遍历插入失败: %v", err))
 		return err
 	}
-	if err := pipeline.CreateIndex(ctx, true, true); err != nil {
-		task.SafeSetError(fmt.Errorf("创建索引失败: %v", err))
-		return err
-	}
+
 	flushTask, err := pipeline.MilvusClient.Flush(ctx, milvusclient.NewFlushOption(pipeline.CollectionName))
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("刷入失败: %v", err))

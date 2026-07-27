@@ -1,8 +1,6 @@
 package main
 
-import (
-	"Main/router"
-)
+import "Main/router"
 
 func main() {
 	//pipeline, _ := rag.NewPipeline(utils.GetCollectionsName())

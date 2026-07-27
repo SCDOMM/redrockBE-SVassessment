@@ -36,6 +36,8 @@ type AiConfig struct {
 	EmbedDim    int64  `yaml:"embed_dim"`
 }
 type MilvusConfig struct {
+	MilvusHost      string `yaml:"milvus_host"`
+	MilvusPort      string `yaml:"milvus_port"`
 	CollectionsName string `yaml:"collections_name"`
 }
 type GeneralConfig struct {
@@ -128,4 +130,10 @@ func GetDefaultExclude() []string {
 }
 func GetDefaultFilterPath() []string {
 	return configData.DefaultFilterPath
+}
+func GetMilvusHost() string {
+	return configData.MilvusConfig.MilvusHost
+}
+func GetMilvusPort() string {
+	return configData.MilvusConfig.MilvusPort
 }

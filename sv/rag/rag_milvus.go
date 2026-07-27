@@ -14,6 +14,15 @@ import (
 )
 
 func (p *Pipeline) CreateCollection(ctx context.Context) error {
+	exists, err := p.MilvusClient.HasCollection(ctx,
+		milvusclient.NewHasCollectionOption(p.CollectionName))
+	if err != nil {
+		return fmt.Errorf("rag: check collection existence before create failed: %w", err)
+	}
+	if exists {
+		// 集合已存在
+		return nil
+	}
 	schema := entity.NewSchema().WithDynamicFieldEnabled(true).
 		WithField(entity.NewField().WithName("wiki_id").WithIsAutoID(true).WithDataType(entity.FieldTypeInt64).WithIsPrimaryKey(true)).
 		WithField(entity.NewField().WithName("wiki_vector").WithDataType(entity.FieldTypeFloatVector).WithDim(utils.GetEmbedDim())).
@@ -24,7 +33,7 @@ func (p *Pipeline) CreateCollection(ctx context.Context) error {
 		WithField(entity.NewField().WithName("start_line").WithDataType(entity.FieldTypeInt64)).
 		WithField(entity.NewField().WithName("end_line").WithDataType(entity.FieldTypeInt64)).
 		WithField(entity.NewField().WithName("language").WithDataType(entity.FieldTypeVarChar).WithMaxLength(64))
-	err := p.MilvusClient.CreateCollection(ctx, milvusclient.NewCreateCollectionOption(p.CollectionName, schema))
+	err = p.MilvusClient.CreateCollection(ctx, milvusclient.NewCreateCollectionOption(p.CollectionName, schema))
 	if err != nil {
 		return fmt.Errorf("rag:fail to create collection %w", err)
 	}

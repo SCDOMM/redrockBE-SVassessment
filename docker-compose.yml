@@ -1,0 +1,99 @@
+services:
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.16
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/etcd:/etcd
+    command: etcd -advertise-client-urls=http://0.0.0.0:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir=/etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:latest
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/minio:/minio_data
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.6.5
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: milvus-etcd:2379
+      MINIO_ADDRESS: milvus-minio:9000
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/milvus:/var/lib/milvus
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      etcd:
+        condition: service_started
+      minio:
+        condition: service_started
+
+  # ------- MySQL-------
+  mysql:
+    container_name: repo-qa-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: dickwiki            # 与 config.yaml 中的 database_name 一致
+      # MYSQL_USER: repo_qa 创建普通用户
+      # MYSQL_PASSWORD: repo_qa_password 普通用户密码
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/mysql:/var/lib/mysql
+#    ports:
+#      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ------- Go 应用 -------
+  go-app:
+    container_name: repo-qa-go-app
+    build:
+      context: .                                # 当前目录
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"                             # 对外暴露 API 端口
+    depends_on:
+      mysql:
+        condition: service_healthy
+      standalone:
+        condition: service_started
+    # environment:
+      # 覆盖 config.yaml 中的主机地址，让 Go 应用使用 Docker 内部网络
+      # MILVUS_HOST: milvus-standalone
+      # MYSQL_HOST: mysql
+    volumes:
+      # 挂载配置文件，使得外部可以修改配置而不用重新构建镜像
+      - ./config.yaml:/app/config.yaml
+      # 如果需要临时仓库存储目录，可以挂载一个卷
+      - repo-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  repo-data:    # 用于持久化拉取的仓库

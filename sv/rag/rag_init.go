@@ -32,7 +32,7 @@ func NewPipeline(collectionsName string) (*Pipeline, error) {
 		option.WithBaseURL(utils.GetEmbedUrl()),
 	)
 	milvusClient, err := milvusclient.New(context.Background(), &milvusclient.ClientConfig{
-		Address: "localhost:19530",
+		Address: utils.GetMilvusHost() + ":" + utils.GetMilvusPort(),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("rag:fail to create pipeline" + err.Error())

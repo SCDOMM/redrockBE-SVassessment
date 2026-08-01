@@ -7,18 +7,18 @@ import (
 	"fmt"
 )
 
-func NewIngest(newIngestModel model.IngestNewModel) (model.IngestNewDTO, error) {
+func NewIngest(ctx context.Context, newIngestModel model.IngestNewModel) (model.IngestNewDTO, error) {
 	task, err := intake.CreateIntakeTask(newIngestModel)
 	if err != nil {
 		return model.IngestNewDTO{}, err
 	}
-	taskManager.AddTask(&task)
+	taskManager.AddTask(task)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(ctx)
 	taskManager.RegisterCancel(task.ID, cancel)
 	go func() {
 		defer taskManager.CancelTask(task.ID)
-		err := intake.HandleIntakeTask(ctx, &task, pipeline)
+		err := intake.HandleIntakeTask(ctx, task, pipeline)
 		if err != nil {
 			fmt.Println(err)
 		}

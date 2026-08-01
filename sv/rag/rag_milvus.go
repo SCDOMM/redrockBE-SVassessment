@@ -101,7 +101,7 @@ func (p *Pipeline) GetFileRecords(ctx context.Context, repoUrl string) (map[stri
 	if err != nil {
 		return nil, fmt.Errorf("rag: query file records failed: %w", err)
 	}
-	// 从 Fields (DataSet) 中获取列
+	// 从 Fields中获取列
 	pathCol := queryResult.GetColumn("file_path")
 	hashCol := queryResult.GetColumn("file_hash")
 

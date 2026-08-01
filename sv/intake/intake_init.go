@@ -52,7 +52,7 @@ func (t *IntakeTask) SafeSetError(err error) {
 	t.Error = append(t.Error, err.Error())
 }
 
-func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
+func CreateIntakeTask(newIntakeModel model.IngestNewModel) (*IntakeTask, error) {
 	snowFlake := utils.NewSnowflake(utils.GetMachineId())
 	id := snowFlake.GenerateID()
 	task := IntakeTask{
@@ -74,7 +74,7 @@ func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 	tempDir, err := os.MkdirTemp("", dirName)
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("fail to create temp dir"))
-		return task, err
+		return &task, err
 	}
 	task.TempDir = tempDir
 
@@ -89,7 +89,7 @@ func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 		if err1 != nil {
 			err = fmt.Errorf("fail to clone repository" + err.Error() + ",fail to delete temp directory" + err1.Error())
 		}
-		return task, err
+		return &task, err
 	}
 
 	//统计文件数目
@@ -120,12 +120,12 @@ func CreateIntakeTask(newIntakeModel model.IngestNewModel) (IntakeTask, error) {
 		if err1 != nil {
 			err = fmt.Errorf("fail to range repository!" + err.Error() + "fail to delete temp directory" + err1.Error())
 		}
-		return task, err
+		return &task, err
 	}
 
 	task.TotalFiles = fileCount
 
-	return task, nil
+	return &task, nil
 }
 
 func isIndexableFile(path string, include []string, exclude []string, d fs.DirEntry) bool {

@@ -34,7 +34,7 @@ func InitNewIngest(ctx context.Context, c *app.RequestContext) {
 		ingestModel.IncludePatterns = utils.GetDefaultInclude()
 	}
 
-	ingestDTO, err := sv.NewIngest(ingestModel)
+	ingestDTO, err := sv.NewIngest(ctx, ingestModel)
 	if err != nil {
 		c.JSON(500, model.FinalResponse{
 			Status: "500",
@@ -53,8 +53,8 @@ func InitCheckIngest(ctx context.Context, c *app.RequestContext) {
 	taskId := c.Param("id")
 	id, err := strconv.Atoi(taskId)
 	if err != nil {
-		c.JSON(500, model.FinalResponse{
-			Status: "500",
+		c.JSON(400, model.FinalResponse{
+			Status: "400",
 			Info:   err.Error(),
 			Data:   nil,
 		})

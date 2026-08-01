@@ -60,17 +60,16 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 	resource := task.RepoURL
 
 	//加载索引和集合
-	if err := pipeline.CreateIndex(ctx, true, true); err != nil {
+	if err := pipeline.CreateIndex(ctx, false, true); err != nil {
 		task.SafeSetError(fmt.Errorf("创建索引失败: %v", err))
 		return err
 	}
 	err := pipeline.LoadCollections(ctx)
-
-	//获取映射
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("加载集合失败: %w", err))
 		return err
 	}
+	//获取映射
 	existingFiles, err := pipeline.GetFileRecords(ctx, resource)
 	if err != nil {
 		task.SafeSetError(fmt.Errorf("查询已有文件记录失败: %w", err))
@@ -91,6 +90,7 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 		if err != nil {
 			return err
 		}
+		//跳过过滤目录
 		if d.IsDir() {
 			filterPathMap := make(map[string]bool, len(task.FilterPath))
 			for _, e := range task.FilterPath {
@@ -119,7 +119,7 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 			return nil
 		}
 
-		//文件更新等
+		//用哈希值摁造文件更新
 		hash := utils.Sha256Hex(data)
 		localFiles[relPath] = hash
 		existingHash, exists := existingFiles[relPath]
@@ -207,7 +207,7 @@ func HandleIntakeTask(ctx context.Context, task *IntakeTask, pipeline *rag.Pipel
 		return nil
 	})
 
-	//错误处理，建立索引与刷入
+	//错误处理，刷入
 	if errors.Is(err, context.Canceled) {
 		task.SafeSetStatus("canceled")
 		task.SafeSetError(fmt.Errorf("intake task cancelled"))

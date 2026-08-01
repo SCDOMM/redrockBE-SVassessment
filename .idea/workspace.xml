@@ -6,15 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="0f3da39e-b78a-4fa5-b8c0-107290304ffb" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_chat.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_ingest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/dao_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/dao_init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/router/router_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/router/router_init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/intake/intake_init.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/intake/intake_process.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/intake/intake_process.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sv/rag/rag_milvus.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/rag/rag_milvus.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sv/sv_chat.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/sv_chat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sv/sv_ingest.go" beforeDir="false" afterPath="$PROJECT_DIR$/sv/sv_ingest.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,17 +146,6 @@
         <option value="GoApplicationRunConfiguration" />
       </set>
     </option>
-    <option name="configurationStatuses">
-      <map>
-        <entry key="GoApplicationRunConfiguration">
-          <value>
-            <map>
-              <entry key="go build DickWiki" value="STOPPED" />
-            </map>
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="RunManager" selected="Go 构建.go build DickWiki">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
@@ -207,8 +196,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-63c95d513abe-9addb268e56c-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-262.8665.270" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-GO-262.8665.270" />
+        <option value="bundled-gosdk-63c95d513abe-9addb268e56c-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-262.8665.336" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-GO-262.8665.336" />
       </set>
     </attachedChunks>
   </component>

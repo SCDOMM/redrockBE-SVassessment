@@ -9,8 +9,7 @@ import (
 	"fmt"
 )
 
-func NewChat(newModel model.ChatNewModel) (model.ChatNewDTO, error) {
-	ctx := context.Background()
+func NewChat(ctx context.Context, newModel model.ChatNewModel) (model.ChatNewDTO, error) {
 	err := pipeline.LoadCollections(ctx)
 	if err != nil {
 		return model.ChatNewDTO{}, err
@@ -44,9 +43,7 @@ func NewChat(newModel model.ChatNewModel) (model.ChatNewDTO, error) {
 		Answer: answer,
 	}, nil
 }
-func ContinueChat(continueModel model.ChatContinueModel) (model.ChatContinueDTO, error) {
-	ctx := context.Background()
-
+func ContinueChat(ctx context.Context, continueModel model.ChatContinueModel) (model.ChatContinueDTO, error) {
 	chatModel, err := dao.GetChat(continueModel.ChatId)
 	if err != nil {
 		return model.ChatContinueDTO{}, err
